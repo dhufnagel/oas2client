@@ -1,0 +1,41 @@
+# typescript-fetch with openapi-generator's stock Mustache templates.
+# Custom templates of the same names (e.g. apis.mustache) can be passed with -t.
+language = "typescript"
+
+[options]
+fileNaming = "kebab-case"
+
+[[files]]
+each = "once"
+template = "openapi-generator-ignore"
+path = ".openapi-generator-ignore"
+
+[[files]]
+each = "model"
+template = "models"
+path = "models/{model.classFilename}.ts"
+
+[[files]]
+each = "once"
+template = "models.index"
+path = "models/index.ts"
+
+[[files]]
+each = "api"
+template = "apis"
+path = "apis/{classFilename}.ts"
+
+[[files]]
+each = "once"
+template = "apis.index"
+path = "apis/index.ts"
+
+[[files]]
+each = "once"
+template = "index"
+path = "index.ts"
+
+[[files]]
+each = "once"
+template = "runtime"
+path = "runtime.ts"

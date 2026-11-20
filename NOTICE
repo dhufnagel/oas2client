@@ -1,0 +1,12 @@
+oas2client
+Copyright 2026 Dominik Hufnagel
+
+This product includes templates from OpenAPI Generator
+(https://github.com/OpenAPITools/openapi-generator), licensed under the
+Apache License, Version 2.0:
+
+  templates/java/              (Java client templates, okhttp-gson library)
+  templates/typescript-fetch/  (typescript-fetch templates)
+
+Copyright 2018 OpenAPI-Generator Contributors (https://openapi-generator.tech)
+Copyright 2018 SmartBear Software

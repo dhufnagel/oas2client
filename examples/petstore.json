@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Petstore", "version": "1.0.0" },
+  "servers": [{ "url": "https://petstore.example.com/v1" }],
+  "security": [{ "bearer": [] }],
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "tags": ["Pets"],
+        "summary": "List pets",
+        "parameters": [
+          { "name": "status", "in": "query", "schema": { "$ref": "#/components/schemas/PetStatus" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "format": "int32" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Pet" } } } }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPet",
+        "tags": ["Pets"],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NewPet" } } }
+        },
+        "responses": {
+          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pet" } } } }
+        }
+      }
+    },
+    "/pets/{petId}": {
+      "get": {
+        "operationId": "getPet",
+        "tags": ["Pets"],
+        "parameters": [{ "name": "petId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pet" } } } },
+          "404": { "description": "Not found" }
+        }
+      },
+      "delete": {
+        "operationId": "deletePet",
+        "tags": ["Pets"],
+        "parameters": [{ "name": "petId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }],
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": { "bearer": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } },
+    "schemas": {
+      "PetStatus": { "type": "string", "enum": ["AVAILABLE", "PENDING", "SOLD"] },
+      "NewPet": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "tag": { "type": "string", "nullable": true },
+          "birthday": { "type": "string", "format": "date" }
+        }
+      },
+      "Pet": {
+        "type": "object",
+        "required": ["id", "name", "status"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "tag": { "type": "string", "nullable": true },
+          "status": { "$ref": "#/components/schemas/PetStatus" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "attributes": { "type": "object", "additionalProperties": { "type": "string" } },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

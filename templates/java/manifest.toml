@@ -1,0 +1,208 @@
+# Java client (okhttp-gson) with openapi-generator's stock templates.
+language = "java"
+layers = [".", "libraries/okhttp-gson"]
+
+[[files]]
+each = "model"
+template = "model"
+path = "{modelFolder}/{model.classname}.java"
+
+[[files]]
+each = "model"
+template = "model_doc"
+path = "docs/{model.classname}.md"
+
+[[files]]
+each = "model"
+template = "model_test"
+path = "{modelTestFolder}/{model.classname}Test.java"
+
+[[files]]
+each = "api"
+template = "api"
+path = "{apiSourceFolder}/{classname}.java"
+
+[[files]]
+each = "api"
+template = "api_doc"
+path = "docs/{classname}.md"
+
+[[files]]
+each = "api"
+template = "api_test"
+path = "{apiTestFolder}/{classname}Test.java"
+
+[[files]]
+each = "once"
+template = "openapi-generator-ignore"
+path = ".openapi-generator-ignore"
+
+[[files]]
+each = "once"
+template = "pom"
+path = "pom.xml"
+
+[[files]]
+each = "once"
+template = "README"
+path = "README.md"
+
+[[files]]
+each = "once"
+template = "build.gradle"
+path = "build.gradle"
+
+[[files]]
+each = "once"
+template = "build.sbt"
+path = "build.sbt"
+
+[[files]]
+each = "once"
+template = "settings.gradle"
+path = "settings.gradle"
+
+[[files]]
+each = "once"
+template = "gradle.properties"
+path = "gradle.properties"
+
+[[files]]
+each = "once"
+template = "manifest"
+path = "src/main/AndroidManifest.xml"
+
+[[files]]
+each = "once"
+template = "travis"
+path = ".travis.yml"
+
+[[files]]
+each = "once"
+template = "maven.yml"
+path = ".github/workflows/maven.yml"
+
+[[files]]
+each = "once"
+template = "gradlew"
+path = "gradlew"
+
+[[files]]
+each = "once"
+template = "gradlew.bat"
+path = "gradlew.bat"
+
+[[files]]
+each = "once"
+template = "gradle-wrapper.properties"
+path = "gradle/wrapper/gradle-wrapper.properties"
+
+[[files]]
+each = "once"
+template = "gradle-wrapper.jar"
+path = "gradle/wrapper/gradle-wrapper.jar"
+
+[[files]]
+each = "once"
+template = "git_push.sh"
+path = "git_push.sh"
+
+[[files]]
+each = "once"
+template = "gitignore"
+path = ".gitignore"
+
+[[files]]
+each = "once"
+template = "openapi"
+path = "api/openapi.yaml"
+
+[[files]]
+each = "once"
+template = "ApiClient"
+path = "{invokerFolder}/ApiClient.java"
+
+[[files]]
+each = "once"
+template = "ServerConfiguration"
+path = "{invokerFolder}/ServerConfiguration.java"
+
+[[files]]
+each = "once"
+template = "ServerVariable"
+path = "{invokerFolder}/ServerVariable.java"
+
+[[files]]
+each = "once"
+template = "StringUtil"
+path = "{invokerFolder}/StringUtil.java"
+
+[[files]]
+each = "once"
+template = "apiException"
+path = "{invokerFolder}/ApiException.java"
+
+[[files]]
+each = "once"
+template = "Configuration"
+path = "{invokerFolder}/Configuration.java"
+
+[[files]]
+each = "once"
+template = "Pair"
+path = "{invokerFolder}/Pair.java"
+
+[[files]]
+each = "once"
+template = "ApiCallback"
+path = "{invokerFolder}/ApiCallback.java"
+
+[[files]]
+each = "once"
+template = "ApiResponse"
+path = "{invokerFolder}/ApiResponse.java"
+
+[[files]]
+each = "once"
+template = "JSON"
+path = "{invokerFolder}/JSON.java"
+
+[[files]]
+each = "once"
+template = "ProgressRequestBody"
+path = "{invokerFolder}/ProgressRequestBody.java"
+
+[[files]]
+each = "once"
+template = "ProgressResponseBody"
+path = "{invokerFolder}/ProgressResponseBody.java"
+
+[[files]]
+each = "once"
+template = "GzipRequestInterceptor"
+path = "{invokerFolder}/GzipRequestInterceptor.java"
+
+[[files]]
+each = "once"
+template = "auth/HttpBasicAuth"
+path = "{invokerFolder}/auth/HttpBasicAuth.java"
+
+[[files]]
+each = "once"
+template = "auth/HttpBearerAuth"
+path = "{invokerFolder}/auth/HttpBearerAuth.java"
+
+[[files]]
+each = "once"
+template = "auth/ApiKeyAuth"
+path = "{invokerFolder}/auth/ApiKeyAuth.java"
+
+[[files]]
+each = "once"
+template = "auth/Authentication"
+path = "{invokerFolder}/auth/Authentication.java"
+
+[[files]]
+each = "once"
+template = "AbstractOpenApiSchema"
+path = "{modelFolder}/AbstractOpenApiSchema.java"

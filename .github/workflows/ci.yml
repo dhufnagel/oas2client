@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+      - name: Generate the example clients
+        run: |
+          cargo run --release -- -g typescript-fetch -i examples/petstore.json -o out/typescript
+          cargo run --release -- -g java -i examples/petstore.json -o out/java
+          cargo run --release -- -g java -t examples/java-jinja-override -i examples/petstore.json -o out/java-jinja
+          diff -r out/java out/java-jinja

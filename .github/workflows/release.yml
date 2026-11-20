@@ -1,0 +1,94 @@
+name: Release
+
+# Push a tag like v0.1.0 to build all binaries and publish a GitHub release.
+# Run manually (workflow_dispatch) to only build the binaries as workflow artifacts.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: x86_64-unknown-linux-musl, os: ubuntu-latest }
+          - { target: aarch64-unknown-linux-musl, os: ubuntu-24.04-arm }
+          - { target: x86_64-apple-darwin, os: macos-13 }
+          - { target: aarch64-apple-darwin, os: macos-14 }
+          - { target: x86_64-pc-windows-msvc, os: windows-latest }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check that the tag matches the crate version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "tag $GITHUB_REF_NAME does not match Cargo.toml version $version" >&2
+            exit 1
+          fi
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install musl tools
+        if: contains(matrix.target, 'musl')
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      - run: cargo build --release --locked --target ${{ matrix.target }}
+
+      - name: Smoke test
+        shell: bash
+        run: ./target/${{ matrix.target }}/release/oas2client -g java -i examples/petstore.json -o smoke
+
+      - name: Package
+        id: package
+        shell: bash
+        run: |
+          name=oas2client-${GITHUB_REF_NAME#v}-${{ matrix.target }}
+          [ "$GITHUB_REF_TYPE" = tag ] || name=oas2client-${GITHUB_SHA::7}-${{ matrix.target }}
+          mkdir "$name"
+          cp LICENSE NOTICE README.md "$name/"
+          if [ "${{ runner.os }}" = Windows ]; then
+            cp target/${{ matrix.target }}/release/oas2client.exe "$name/"
+            7z a "$name.zip" "$name" > /dev/null
+            archive="$name.zip"
+          else
+            cp target/${{ matrix.target }}/release/oas2client "$name/"
+            tar czf "$name.tar.gz" "$name"
+            archive="$name.tar.gz"
+          fi
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ steps.package.outputs.archive }}
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: cd dist && sha256sum * > SHA256SUMS
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
